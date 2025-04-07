@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+.slider{
+    @apply h-7 w-[280px] border-2 border-green-800 rounded-2xl;
+}
+
+.thumb{
+    @apply bg-green-800 cursor-pointer w-6 h-6 rounded-full;
+}
