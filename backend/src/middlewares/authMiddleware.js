@@ -12,7 +12,7 @@ export const isAuthenticated = async (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
         //finding the user with extracted user id from the token
-        const user = await User.findById(decodedToken._id).select("-password");
+        const user = await User.findById(decodedToken.userId).select("-password");
 
         //last check if the user with extracted details from token not found
 
@@ -23,6 +23,8 @@ export const isAuthenticated = async (req, res, next) => {
         //if everything is good..
 
         req.user = user;
+        // console.log(user)
+
         next();
 
     } catch (error) {

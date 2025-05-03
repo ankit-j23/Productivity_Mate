@@ -1,10 +1,18 @@
 import React, { useContext } from "react";
 import ReactSlider from "react-slider";
-import PomoContext from "../Contexts/PomodoroContext/PomoContext";
-import BackButton from "./Buttons/BackButton";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  updateBreakDuration,
+  toggleSettings,
+  updateWorkDuraion,
+} from "../features/pomodoro/pomodoroSlice";
 
 const SettingsPomodoroTimer = () => {
-    const { workDuration , breakDuration , setWorkDuration , setBreakDuration , setShowSettings, showSettings} = useContext(PomoContext)
+  const dispatch = useDispatch();
+  const { workDuration, breakDuration, showSettings } = useSelector(
+    (state) => state.pomo
+  );
+
   return (
     <div className="flex flex-col items-center justify-center gap-8 mt-16 lg:mt-9 2xl:mt-18">
       <div>
@@ -16,7 +24,9 @@ const SettingsPomodoroTimer = () => {
           thumbClassName="thumb"
           trackClassName="track"
           value={workDuration}
-          onChange={newSelectedValue => setWorkDuration(newSelectedValue)}
+          onChange={(newSelectedValue) =>
+            dispatch(updateWorkDuraion(newSelectedValue))
+          }
           min={1}
           max={120}
         />
@@ -30,12 +40,20 @@ const SettingsPomodoroTimer = () => {
           thumbClassName="thumb"
           trackClassName="track"
           value={breakDuration}
-          onChange={newSelectedValue => setBreakDuration(newSelectedValue)}
+          s
+          onChange={(newSelectedValue) =>
+            dispatch(updateBreakDuration(newSelectedValue))
+          }
           min={1}
           max={120}
         />
       </div>
-      <div className="shadow-xl p-2 border-2 rounded-lg border-green-800/60 cursor-pointer" onClick={()=>{setShowSettings(!showSettings)}}>
+      <div
+        className="shadow-xl p-2 border-2 rounded-lg border-green-800/60 cursor-pointer"
+        onClick={() => {
+          dispatch(toggleSettings(!showSettings));
+        }}
+      >
         <h1>Done</h1>
       </div>
     </div>

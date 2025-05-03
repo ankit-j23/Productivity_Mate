@@ -1,10 +1,82 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Lock , Mail } from "lucide-react";
+import React, { useEffect, useRef , useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Lock, Mail , Loader2 } from "lucide-react";
+import modalClose from "../lib/modalClose";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  authStarted,
+  authSuccess,
+  authFailed,
+} from "../features/auth/AuthSlice";
+import validateForm from "../lib/validateForm";
+import toast from "react-hot-toast";
+import axiosInstance from "../lib/axios";
 
 const LoginPage = () => {
+  //ref for modal closing
+  const closeRef = useRef();
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  //from rtk
+  const { user, isAuthenticated, loading, error } = useSelector(
+    (state) => state.auth
+  );
+
+  //credentails to put in the route
+  const [credentails, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
+
+  //main login function
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(authStarted(true));
+
+    //validations
+    const validationRes = validateForm(credentails, "login");
+    if (!validationRes) {
+      return;
+    }
+
+    try {
+      const res = await axiosInstance.post("/auth/login", credentails);
+      dispatch(authSuccess(res.data));
+
+      //to remove the console error that is coming coz the checkauth dispatch fires when not logged in 
+      localStorage.setItem("isAuthenticated" , true)
+
+      //timeout because i don't want the navigate to fire before dispatch is done properly
+      setTimeout(() => {
+        navigate("/");
+      }, 200);
+      
+      toast.success("Logged in successfully");
+      console.log(res.data);
+    } catch (error) {
+      console.log(error)
+      dispatch(authFailed(error.response.data.message || "Login Failed"));
+      toast.error(error.response.data.message || "Sorry, login failed");
+      // console.log(error)
+    }
+  };
+
+
+  //onchange function to pass in the inputs
+  const onChange = (e) => {
+    setCredentials({ ...credentails, [e.target.name]: e.target.value });
+  };
+
   return (
-    <div className="flex fixed inset-0 min-h-screen bg-black/60 items-center justify-center">
+    <div
+      ref={closeRef}
+      onClick={(e) => {
+        modalClose(e, closeRef, navigate);
+      }}
+      className="flex fixed inset-0 min-h-screen bg-black/60 items-center justify-center"
+    >
       <div className="login-modal bg-white rounded-lg w-[450px]">
         <div className="flex flex-col gap-6 w-full px-16 py-22">
           <div className="flex flex-col items-center gap-3 ">
@@ -13,7 +85,7 @@ const LoginPage = () => {
             </h1>
             <p className="text-xl font-semibold">Wecome !!</p>
           </div>
-          <form className="">
+          <form onSubmit={handleSubmit} className="">
             <div className="flex flex-col gap-2 ">
               <div className="flex flex-col">
                 <label className="text-black/75" htmlFor="email">
@@ -28,9 +100,9 @@ const LoginPage = () => {
                     type="text"
                     id="email"
                     name="email"
-                    // value={creds.email}
+                    value={credentails.email}
                     placeholder="Jhon@cena.com"
-                    // onChange={onchange}
+                    onChange={onChange}
                   />
                 </div>
               </div>
@@ -47,24 +119,33 @@ const LoginPage = () => {
                     type="password"
                     id="password"
                     name="password"
-                    // value={creds.password}
+                    value={credentails.password}
                     placeholder="type your password here"
-                    // onChange={onchange}
+                    onChange={onChange}
                   />
                 </div>
               </div>
               <button
                 type="submit"
-                className="border p-2 rounded-md bg-green-800 text-white cursor-pointer"
+                disabled={loading}
+                className={`border p-2 rounded-md ${
+                  loading ? "bg-green-800/60" : "bg-green-800"
+                } text-white cursor-pointer`}
               >
-                SignIn
+                {loading ? (
+                  <>
+                    <Loader2 className="size-5 animate-spin m-auto" />
+                  </>
+                ) : (
+                  "Sign Up"
+                )}
               </button>
             </div>
           </form>
           <div className="flex justify-center text-md">
             <p>
-              Already have an account?{" "}
-              <Link className="text-blue-800 text-lg">SignIn</Link>
+              Doesn't have an account?{" "}
+              <Link to={'/signuppage'} className="text-blue-800 text-lg">Signup</Link>
             </p>
           </div>
         </div>

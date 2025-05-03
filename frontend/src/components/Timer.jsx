@@ -4,12 +4,13 @@ import "react-circular-progressbar/dist/styles.css";
 import PlayButton from "./Buttons/PlayButton";
 import PauseButton from "./Buttons/PauseButton";
 import SettingsButton from "./Buttons/SettingsButton";
-import PomoContext from "../Contexts/PomodoroContext/PomoContext";
+import { useSelector , useDispatch } from "react-redux";
+import { toggleSettings } from "../features/pomodoro/pomodoroSlice";
 
 const Timer = () => {
-  const context = useContext(PomoContext);
-  const { showSettings, setShowSettings, workDuration, breakDuration } =
-    context;
+  const dispatch = useDispatch()
+  const {showSettings , workDuration , breakDuration} = useSelector((state)=>state.pomo)
+
   const [isPaused, setIsPaused] = useState(true);
   const [mode, setMode] = useState("work");
   const [timeLeft, setTimeLeft] = useState(0);
@@ -17,6 +18,28 @@ const Timer = () => {
   const timeLeftRef = useRef(timeLeft);
   const modeRef = useRef(mode);
   const isPausedRef = useRef(isPaused);
+
+
+  useEffect(() => {
+    
+    initiateTimer();
+
+    const intervalId = setInterval(() => {
+      if (isPausedRef.current) {
+        return;
+      }
+
+      if (timeLeftRef.current === 0) {
+        return switchMode();
+      }
+
+      tick();
+    }, 1000);
+
+
+    return () => clearInterval(intervalId);
+  }, [showSettings , workDuration , breakDuration]);
+  
 
   const initiateTimer = () => {
     timeLeftRef.current = workDuration * 60;
@@ -43,26 +66,9 @@ const Timer = () => {
     setTimeLeft(timeLeftRef.current);
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (isPausedRef.current) {
-        return;
-      }
-
-      if (timeLeftRef.current === 0) {
-        return switchMode();
-      }
-
-      tick();
-    }, 1000);
-
-    initiateTimer();
-
-    return () => clearInterval(intervalId);
-  }, [context]);
 
   const totalTime = mode === "work" ? workDuration * 60 : breakDuration * 60;
-  const percentageLeft = (100- (Math.round((timeLeft / totalTime) * 100)));
+  const percentageLeft = (Math.round((timeLeft / totalTime) * 100));
 
   const minutesLeft = Math.floor(timeLeft / 60);
   let secondsLeft = timeLeft % 60;
@@ -99,7 +105,7 @@ const Timer = () => {
       <div
         className="shadow-xl p-2 border-2 border-green-800/60 rounded-lg"
         onClick={() => {
-          setShowSettings(!showSettings);
+          dispatch(toggleSettings(!showSettings));
         }}
       >
         <SettingsButton />

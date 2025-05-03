@@ -1,6 +1,7 @@
 import User from "../models/users.model.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
+import cloudinary from '../lib/cloudinary.js'
 
 export const signupController = async (req, res) => {
     //destructuring the creds from req body to perform some manual validations on them
@@ -12,7 +13,7 @@ export const signupController = async (req, res) => {
 
         //checking if all the creds are provided except profilePic as its not required firsthand
         if (!fullName || !email || !password) {
-            return res.status(400).json({ message: "All fields are required ot be filled" });
+            return res.status(400).json({ message: "All fields are required" });
         }
 
         //checking if the user already doesn't exists
@@ -24,8 +25,16 @@ export const signupController = async (req, res) => {
         //if all the validations are passed...
 
         //hashing password
-        const salt = await bcrypt.genSaltSync(10);
+        const salt = await bcrypt.genSalt(10);
         const securedPassword = await bcrypt.hash(password, salt);
+
+        //imgage upload through cloudinary
+        let profilePicUrl = "";
+        const trimmedProfilePic = profilePic?.trim();
+        if(trimmedProfilePic){
+            const cloudinaryResponse = await cloudinary.uploader.upload(trimmedProfilePic);
+            profilePicUrl = cloudinaryResponse.secure_url;
+        }
 
         //creating a new user in the database 
 
@@ -33,7 +42,7 @@ export const signupController = async (req, res) => {
             fullName,
             email,
             password: securedPassword,
-            profilePic
+            profilePic: profilePicUrl
         }))
 
         //if the signup is done now generating the token and sending all required things in the response and saving the new user
@@ -97,6 +106,15 @@ export const loginController = async (req, res) => {
     } catch (error) {
         console.log("Some error occured in the login controller" + error.message)
         res.status(500).json({message : "Internal server error"})
+    }
+}
+
+export const checkAuthController = async (req , res) =>{
+    try {
+        res.status(200).json(req.user)
+    } catch (error) {
+        console.log("Some error occured in the checkAuth Controller" , error)
+        res.status(500).json({message:"Internal server error"})
     }
 }
 

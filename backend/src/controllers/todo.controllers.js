@@ -3,7 +3,7 @@ import Todo from "../models/todos.model.js"
 export const getTodos = async (req , res) =>{
     try {
         //getting the user id from req
-        const userId = req.user.id             // Todo: Confirm if `req.user.id` is correct or if `_id` is needed
+        const userId = req.user.id           // Todo: Confirm if `req.user.id` is correct or if `_id` is needed
 
         //fetching the todos for the corresponding user with the above id
         const todos = await Todo.find({ user:userId});
@@ -27,7 +27,8 @@ export const addTodo = async (req , res) =>{
         const savedTodo = await newTodo.save();
 
         res.status(201).json(savedTodo);
-
+        // console.log(req.user.id)
+        // console.log(req.body)
 
     } catch (error) {
         console.log("Some error occured in the addTodo Controller" + error.message)
