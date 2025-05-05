@@ -14,7 +14,7 @@ const TodoItem = ({todo}) => {
 
   const toggleCheck = ( ) =>{
     try {
-      dispatch(updateTodo({id:todo._id , updates:{isCompleted: !todo.isCompleted}})).unwrap();
+      dispatch(updateTodo({id:todo._id, updates:{isCompleted: !todo.isCompleted}})).unwrap();
 
     } catch (error) {
       console.log("Error in toggleCheck Function in the todoItem component" + error)
