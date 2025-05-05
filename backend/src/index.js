@@ -11,7 +11,7 @@ dotenv.config();
 connectToMOngo();
 
 const app = express();
-const port = process.env.PORT;
+const PORT = process.env.PORT;
 const __dirname = path.resolve();
 
 //middlewares
@@ -33,7 +33,7 @@ if(process.env.NODE_ENV === "production"){
     })
 }
 
-app.listen(port , ()=>{
-    console.log(`App is successfully listening on port ${port}`)
+app.listen(PORT , ()=>{
+    console.log(`App is successfully listening on port ${PORT}`)
 })
 
