@@ -1,6 +1,6 @@
 import React, { useEffect, useRef , useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Lock, Mail , Loader2 } from "lucide-react";
+import { Lock, Mail , Loader2, Cross, X , CircleCheck} from "lucide-react";
 import modalClose from "../lib/modalClose";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -20,15 +20,18 @@ const LoginPage = () => {
   const dispatch = useDispatch();
 
   //from rtk
-  const { user, isAuthenticated, loading, error } = useSelector(
+  const { user, loading, error } = useSelector(
     (state) => state.auth
   );
+
+
 
   //credentails to put in the route
   const [credentails, setCredentials] = useState({
     email: "",
     password: "",
   });
+
 
   //main login function
   const handleSubmit = async (e) => {
@@ -45,16 +48,14 @@ const LoginPage = () => {
       const res = await axiosInstance.post("/auth/login", credentails);
       dispatch(authSuccess(res.data));
 
-      //to remove the console error that is coming coz the checkauth dispatch fires when not logged in 
-      localStorage.setItem("isAuthenticated" , true)
-
-      //timeout because i don't want the navigate to fire before dispatch is done properly
-      setTimeout(() => {
-        navigate("/");
-      }, 200);
       
       toast.success("Logged in successfully");
       console.log(res.data);
+
+      setTimeout(() => {
+        navigate("/authhome");
+      }, 200);
+
     } catch (error) {
       console.log(error)
       dispatch(authFailed(error.response.data.message || "Login Failed"));
@@ -75,15 +76,16 @@ const LoginPage = () => {
       onClick={(e) => {
         modalClose(e, closeRef, navigate);
       }}
-      className="flex fixed inset-0 min-h-screen bg-black/60 items-center justify-center"
+      className="flex fixed inset-0 min-h-screen bg-black/80 items-center justify-center"
     >
-      <div className="login-modal bg-white rounded-lg w-[450px]">
-        <div className="flex flex-col gap-6 w-full px-16 py-22">
+      <div className="flex flex-col login-modal bg-white rounded-lg 2x:w-[450px]">
+        <button className="place-self-end pt-2 pr-2 hidden max-lg:inline"><X/></button>
+        <div className="flex flex-col gap-2 2xl:gap-6 w-full px-12 sm:px-16 py-8 sm:py-12 2xl:py-22">
           <div className="flex flex-col items-center gap-3 ">
-            <h1 className="text-3xl text-green-800 font-sans font-semibold  italic">
+            <h1 className="text-xl 2xl:text-3xl text-green-800 font-sans font-semibold  italic">
               Productivity Mate
             </h1>
-            <p className="text-xl font-semibold">Wecome !!</p>
+            <p className="text-xl 2xl:text-xl font-semibold">Wecome !!</p>
           </div>
           <form onSubmit={handleSubmit} className="">
             <div className="flex flex-col gap-2 ">
@@ -93,7 +95,7 @@ const LoginPage = () => {
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 pl-3 flex items-center">
-                    <Mail className="size-5 text-green-800/60" />
+                    <Mail className=" size-4 2xl:size-5 text-green-800/60" />
                   </div>
                   <input
                     className="border-2 p-2 pl-10 rounded-md border-green-800/60 focus:outline-green-800/80 w-full"
@@ -145,7 +147,7 @@ const LoginPage = () => {
           <div className="flex justify-center text-md">
             <p>
               Doesn't have an account?{" "}
-              <Link to={'/signuppage'} className="text-blue-800 text-lg">Signup</Link>
+              <Link to={'/signuppage'} className="text-blue-800 text-md sm:text-lg">Signup</Link>
             </p>
           </div>
         </div>

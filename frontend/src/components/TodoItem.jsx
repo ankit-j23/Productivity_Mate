@@ -36,9 +36,9 @@ const TodoItem = ({todo}) => {
         <div className="flex gap-2">
           <div onClick={toggleCheck}>
             {!todo.isCompleted ? (
-              <Square className=" size-4 2xl:size-5 text-green-800/80" />
+              <Square className=" size-4 2xl:size-5 text-green-800/80 cursor-pointer" />
             ):
-            <CheckSquare className=" size-4 2xl:size-5 text-green-800/80"/>
+            <CheckSquare className=" size-4 2xl:size-5 text-green-800/80 cursor-pointer"/>
             }
           </div>
           <p className={`font-sans -mt-0.5 lg:-mt-1.5 text-sm lg:text-md 2xl:text-lg ${!todo.isCompleted ? '' : 'line-through'}`}>
@@ -47,7 +47,7 @@ const TodoItem = ({todo}) => {
         </div>
         <div className="flex gap-1 lg:gap-2 max-lg:ml-1">
           <button><Edit onClick={handleEdit} className="size-4 2xl:size-5 text-green-800/80 cursor-pointer" /></button>
-          <button><Delete onClick={handleDeleteTodo} className="size-4 2xl:size-5 text-green-800/80" /></button>
+          <button><Delete onClick={handleDeleteTodo} className="size-4 2xl:size-5 text-green-800/80 cursor-pointer" /></button>
         </div>
       </div>
       <hr className="w-full text-black/60" />

@@ -7,3 +7,30 @@
 .thumb{
     @apply bg-green-800 cursor-pointer w-6 h-6 rounded-full;
 }
+
+/* Keyframes for typewriter effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 15ch;
+  }
+}
+
+/* Apply the animation to the element */
+.typewriter {
+  display: inline-block;
+  overflow: hidden; /* Hide text before it’s typed */
+  white-space: nowrap; /* Prevent text from wrapping */
+  /* font-family: 'Courier New', Courier, monospace; Monospace font for effect */
+  border-right: 3px solid #016630; /* Cursor-like effect */
+  animation: typing 3s steps(15 , end) 1s forwards, blink 0.75s step-end infinite;
+}
+
+/* Cursor blink effect */
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}

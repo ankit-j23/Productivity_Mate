@@ -14,14 +14,11 @@ const TodoList = () => {
     currentTodo
   } = useSelector((state) => state.todo);
 
-  const isAuthenticated = localStorage.getItem('isAuthenticated')
 
   const [todo, setTodo] = useState("");
 
   useEffect(() => {
-    if(isAuthenticated){
       dispatch(getTodos());
-    }
   }, [dispatch]);
 
   //another useffect to solve the problem when earlier first time currentTodo was saying null

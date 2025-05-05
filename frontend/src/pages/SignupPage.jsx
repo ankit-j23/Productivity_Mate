@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import axiosInstance from "../lib/axios";
-import { Lock, User, Mail, Camera, Loader2 } from "lucide-react";
+import { Lock, User, Mail, Camera, Loader2 , X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import profileAvatar from "../assets/profile.png";
 import modalClose from "../lib/modalClose";
@@ -21,7 +21,7 @@ const SignupPage = () => {
 
   //from rtk
   const dispatch = useDispatch();
-  const { user, isAuthenticated, isUploadingImage, loading, error } =
+  const { user, isUploadingImage, loading, error } =
     useSelector((state) => state.auth);
 
   //credentails to put in the route
@@ -70,9 +70,13 @@ const SignupPage = () => {
     try {
       const res = await axiosInstance.post("/auth/signup", credentails);
       dispatch(authSuccess(res.data));
-      navigate("/");
+
       toast.success("Account created successfully");
       console.log(res);
+      setTimeout(() => {
+        navigate("/authhome");
+      }, 200);
+      
     } catch (error) {
       dispatch(authFailed(error.response.data.message || "Signup Failed"));
       toast.error(error.response.data.message || "Sorry, Signup failed");
@@ -92,13 +96,14 @@ const SignupPage = () => {
       }}
       className="flex fixed inset-0 min-h-screen bg-black/60 items-center justify-center"
     >
-      <div className="login-modal bg-white rounded-lg w-[450px]">
-        <div className="flex flex-col gap-3 w-full px-16 py-10">
-          <div className="flex flex-col items-center gap-3">
-            <h1 className="text-3xl text-green-800 font-sans font-semibold  italic">
+      <div className="flex flex-col login-modal bg-white rounded-lg sm:w-[400px] lg:w-[450px]">
+      <button className="place-self-end -mb-9 pt-1 pr-2 hidden max-lg:inline"><X/></button>
+        <div className="flex flex-col gap-2 2xl:gap-3 w-full px-12 sm:px-16 py-8 2xl:py-10">
+          <div className="flex flex-col items-center max-sm:gap-1 sm:gap-3">
+            <h1 className="text-xl 2xl:text-3xl text-green-800 font-sans font-semibold  italic">
               Productivity Mate
             </h1>
-            <p className="text-xl font-semibold">Welcome !!</p>
+            <p className="text-md sm:text-xl font-semibold">Welcome !!</p>
           </div>
 
           <form onSubmit={handleSubmit} className="">
@@ -107,7 +112,7 @@ const SignupPage = () => {
                 <div className="relative">
                   <img
                     src={selectedImage || profileAvatar}
-                    className="size-28 rounded-full border-4 object-cover border-green-800/60"
+                    className="size-18 2xl:size-28 rounded-full border-4 object-cover border-green-800/60"
                     alt="profile-avatar"
                   />
                   <label
@@ -118,7 +123,7 @@ const SignupPage = () => {
                         : " "
                     }`}
                   >
-                    <Camera className="w-5 h-5 text-green-800" />
+                    <Camera className="w-4 2xl:w-5 h-4 2xl:h-5 text-green-800" />
                     <input
                       type="file"
                       id="profile-avatar-upload"
@@ -138,7 +143,7 @@ const SignupPage = () => {
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 pl-3 flex items-center">
-                    <User className="size-5 text-green-800/60" />
+                    <User className="size-4 2xl:size-5 text-green-800/60" />
                   </div>
                   <input
                     className="border-2 p-2 pl-10 rounded-md border-green-800/60 focus:outline-green-800/80 w-full"
@@ -157,7 +162,7 @@ const SignupPage = () => {
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 pl-3 flex items-center">
-                    <Mail className="size-5 text-green-800/60" />
+                    <Mail className="size-4 2xl:size-5 text-green-800/60" />
                   </div>
                   <input
                     className="border-2 p-2 pl-10 rounded-md border-green-800/60 focus:outline-green-800/80 w-full"
@@ -176,7 +181,7 @@ const SignupPage = () => {
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 pl-3 flex items-center">
-                    <Lock className="size-5 text-green-800/60" />
+                    <Lock className="size-4 2xl:size-5 text-green-800/60" />
                   </div>
                   <input
                     className="border-2 p-2 pl-10 rounded-md border-green-800/60 focus:outline-green-800/80 w-full"
@@ -191,7 +196,7 @@ const SignupPage = () => {
               </div>
               <button
                 type="submit"
-                disabled = {loading}
+                disabled={loading}
                 className={`border p-2 rounded-md ${
                   loading ? "bg-green-800/60" : "bg-green-800"
                 } text-white cursor-pointer`}
@@ -209,7 +214,7 @@ const SignupPage = () => {
           <div className="flex justify-center text-md">
             <p>
               Already have an account?{" "}
-              <Link to={"/login"} className="text-blue-800 text-lg">
+              <Link to={"/login"} className="text-blue-800 text-md sm:text-lg">
                 SignIn
               </Link>
             </p>
