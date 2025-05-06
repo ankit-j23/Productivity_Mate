@@ -88,7 +88,7 @@ const Timer = () => {
       </div>
       <div className="flex flex-col gap-3 sm:gap-5 lg:gap-3 2xl:gap-5 items-center justify-center">
         <div className="flex flex-col gap-2 items-center">
-          <h1 className="text-xl sm:2xl 2xl:text-3xl text-green-800">
+          <h1 className="text-md sm:md 2xl:text-2xl text-green-800">
             {mode === "work" ? "Pomodoro" : "BreakTime"}
           </h1>
           <p className="xl:text-lg">
