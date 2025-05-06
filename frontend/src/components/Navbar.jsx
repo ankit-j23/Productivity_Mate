@@ -17,7 +17,7 @@ const Navbar = () => {
       const res = await axiosInstance.post("/auth/logout");
       console.log(res);
       dispatch(authLogout());
-      toast.success("Logger Out Successfully");
+      toast.success("Logged Out Successfully");
       setTimeout(() => {
         navigate('/')
       }, 200);

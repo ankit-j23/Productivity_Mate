@@ -50,7 +50,7 @@ const LoginPage = () => {
 
       
       toast.success("Logged in successfully");
-      console.log(res.data);
+      // console.log(res.data);
 
       setTimeout(() => {
         navigate("/authhome");
@@ -59,7 +59,7 @@ const LoginPage = () => {
     } catch (error) {
       console.log(error)
       dispatch(authFailed(error.response.data.message || "Login Failed"));
-      toast.error(error.response.data.message || "Sorry, login failed");
+      toast.error(error.response.data.message || "Invalid Credentials");
       // console.log(error)
     }
   };
@@ -78,9 +78,11 @@ const LoginPage = () => {
       }}
       className="flex fixed inset-0 min-h-screen bg-black/80 items-center justify-center"
     >
-      <div className="flex flex-col login-modal bg-white rounded-lg 2x:w-[450px]">
-        <button className="place-self-end pt-2 pr-2 hidden max-lg:inline"><X/></button>
-        <div className="flex flex-col gap-2 2xl:gap-6 w-full px-12 sm:px-16 py-8 sm:py-12 2xl:py-22">
+      <div className="relative flex flex-col login-modal bg-white rounded-lg 2x:w-[450px] -mt-10 px-12 sm:px-16 lg:px-24">
+         <button onClick={()=>{navigate('/')}} className="place-self-end absolute top-2 right-2">
+                  <X />
+                </button>
+        <div className="flex flex-col gap-2 2xl:gap-6 w-full py-8 sm:py-12 2xl:py-22">
           <div className="flex flex-col items-center gap-3 ">
             <h1 className="text-xl 2xl:text-3xl text-green-800 font-sans font-semibold  italic">
               Productivity Mate

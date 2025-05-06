@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import axiosInstance from "../lib/axios";
-import { Lock, User, Mail, Camera, Loader2 , X } from "lucide-react";
+import { Lock, User, Mail, Camera, Loader2, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import profileAvatar from "../assets/profile.png";
 import modalClose from "../lib/modalClose";
@@ -21,8 +21,9 @@ const SignupPage = () => {
 
   //from rtk
   const dispatch = useDispatch();
-  const { user, isUploadingImage, loading, error } =
-    useSelector((state) => state.auth);
+  const { user, isUploadingImage, loading, error } = useSelector(
+    (state) => state.auth
+  );
 
   //credentails to put in the route
   const [credentails, setCredentials] = useState({
@@ -72,14 +73,13 @@ const SignupPage = () => {
       dispatch(authSuccess(res.data));
 
       toast.success("Account created successfully");
-      console.log(res);
+      // console.log(res);
       setTimeout(() => {
         navigate("/authhome");
       }, 200);
-      
     } catch (error) {
       dispatch(authFailed(error.response.data.message || "Signup Failed"));
-      toast.error(error.response.data.message || "Sorry, Signup failed");
+      toast.error(error.response.data.message || "Invalid Credentials");
     }
   };
 
@@ -96,8 +96,10 @@ const SignupPage = () => {
       }}
       className="flex fixed inset-0 min-h-screen bg-black/60 items-center justify-center"
     >
-      <div className="flex flex-col login-modal bg-white rounded-lg sm:w-[400px] lg:w-[450px]">
-      <button className="place-self-end -mb-9 pt-1 pr-2 hidden max-lg:inline"><X/></button>
+      <div className="relative flex flex-col login-modal bg-white rounded-lg sm:w-[400px] lg:w-[450px]  -mt-10">
+        <button onClick={()=>{navigate('/')}} className="place-self-end absolute top-2 right-2">
+          <X />
+        </button>
         <div className="flex flex-col gap-2 2xl:gap-3 w-full px-12 sm:px-16 py-8 2xl:py-10">
           <div className="flex flex-col items-center max-sm:gap-1 sm:gap-3">
             <h1 className="text-xl 2xl:text-3xl text-green-800 font-sans font-semibold  italic">
